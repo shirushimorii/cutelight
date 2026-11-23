@@ -1,0 +1,23 @@
+# ビルド成果物（ローカルの番号付きビルドは保持するが Git には含めない）
+/builds/
+/build/
+/cmake-build-*/
+/.cache/
+/tmp/
+
+# CMake / Ninja
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+Makefile
+*.ninja
+.ninja_*
+
+# エディタ / OS
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+.vscode/

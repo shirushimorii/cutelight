@@ -1,0 +1,337 @@
+#!/usr/bin/env bash
+
+set -u
+
+SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+EMBEDDED_BUILD_DIR="@BUILD_DIR@"
+APP_ID="com.mori.cutelight"
+APP_NAME="CuteLight"
+BINARY="cutelight"
+PREFIX="$HOME/.local/opt/cutelight"
+DESKTOP_DIR="$HOME/.local/share/applications"
+ICON_DIR="$HOME/.local/share/icons/hicolor/scalable/apps"
+STATE_DIR="$HOME/.local/state/cutelight"
+CONFIG_ROOT="${XDG_CONFIG_HOME:-$HOME/.config}"
+CONFIG_DIR="$CONFIG_ROOT/cutelight"
+CONFIG_FILE="$CONFIG_DIR/cutelight.conf"
+AUTOSTART_DIR="$CONFIG_ROOT/autostart"
+AUTOSTART_FILE="$AUTOSTART_DIR/$APP_ID.desktop"
+
+LEGACY_DESKTOP="$DESKTOP_DIR/com.mori.spotlight.desktop"
+LEGACY_AUTOSTART="$AUTOSTART_DIR/com.mori.spotlight.desktop"
+LEGACY_ICON="$ICON_DIR/com.mori.spotlight.svg"
+LEGACY_PREFIX="$HOME/.local/opt/spotlight"
+LEGACY_STATE="$HOME/.local/state/spotlight"
+LEGACY_CONFIG="$CONFIG_ROOT/spotlight"
+
+if [[ "$SOURCE_DIR" != "$EMBEDDED_BUILD_DIR" ]]; then
+    echo "warning: installer is running from $SOURCE_DIR, but was generated for $EMBEDDED_BUILD_DIR"
+fi
+
+if [[ ! -x "$SOURCE_DIR/$BINARY" ]]; then
+    echo "error: compiled executable not found in $SOURCE_DIR" >&2
+    exit 1
+fi
+
+echo "Installing $APP_NAME from: $SOURCE_DIR"
+
+if pgrep -x "$BINARY" >/dev/null 2>&1; then
+    echo "Stopping the previous $APP_NAME process..."
+    pkill -x "$BINARY" >/dev/null 2>&1 || true
+    sleep 0.2
+fi
+
+mkdir -p "$PREFIX" "$DESKTOP_DIR" "$ICON_DIR" "$STATE_DIR" "$CONFIG_DIR" "$AUTOSTART_DIR"
+
+# 旧 Spotlight プロトタイプをアンインストールし、残骸を掃除する
+echo "Removing the old Spotlight installation..."
+if [[ -x "$LEGACY_PREFIX/uninstall.sh" ]]; then
+    "$LEGACY_PREFIX/uninstall.sh" >/dev/null 2>&1 || true
+fi
+rm -rf "$LEGACY_PREFIX" "$LEGACY_STATE" "$LEGACY_CONFIG"
+rm -f "$LEGACY_DESKTOP" "$LEGACY_AUTOSTART" "$LEGACY_ICON"
+
+# 既存のアプリケーションファイルを更新し、ユーザー設定は保持する
+echo "Installing the new build..."
+rm -f "$PREFIX/$BINARY"
+cp "$SOURCE_DIR/$BINARY" "$PREFIX/$BINARY"
+chmod +x "$PREFIX/$BINARY"
+
+if [[ -d "$SOURCE_DIR/runtime/assets" ]]; then
+    rm -rf "$PREFIX/assets"
+    cp -R "$SOURCE_DIR/runtime/assets" "$PREFIX/assets"
+fi
+
+DESKTOP_FILE="$DESKTOP_DIR/$APP_ID.desktop"
+if [[ -f "$SOURCE_DIR/packaging/$APP_ID.desktop" ]]; then
+    cp "$SOURCE_DIR/packaging/$APP_ID.desktop" "$DESKTOP_FILE"
+else
+    cat > "$DESKTOP_FILE" <<EOF
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=$APP_NAME
+GenericName=Desktop Search
+Comment=macOS-style Spotlight search for Cutefish
+Exec=cutelight
+TryExec=cutelight
+Icon=$APP_ID
+Terminal=false
+Categories=Utility;
+OnlyShowIn=Cutefish;
+StartupNotify=true
+EOF
+fi
+
+sed -i "s|^Exec=.*|Exec=\"$PREFIX/$BINARY\"|" "$DESKTOP_FILE"
+sed -i "s|^TryExec=.*|TryExec=$PREFIX/$BINARY|" "$DESKTOP_FILE"
+cat >> "$DESKTOP_FILE" <<EOF
+
+Actions=Settings;ToggleSearch;
+
+[Desktop Action Settings]
+Name=Settings
+Exec="$PREFIX/$BINARY" --settings
+
+[Desktop Action ToggleSearch]
+Name=Toggle search
+Exec="$PREFIX/$BINARY" --toggle
+EOF
+
+ICON_SOURCE="$SOURCE_DIR/runtime/assets/icons/$APP_ID.svg"
+if [[ ! -f "$ICON_SOURCE" ]]; then
+    ICON_SOURCE="$SOURCE_DIR/assets/icons/$APP_ID.svg"
+fi
+if [[ -f "$ICON_SOURCE" ]]; then
+    cp "$ICON_SOURCE" "$ICON_DIR/$APP_ID.svg"
+fi
+
+# 新しいビルドをログイン時に起動する
+echo "Enabling autostart for the new build..."
+cat > "$AUTOSTART_FILE" <<EOF
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=$APP_NAME
+GenericName=Desktop Search
+Comment=macOS-style Spotlight search for Cutefish
+Exec="$PREFIX/$BINARY" --autostart
+TryExec=$PREFIX/$BINARY
+Icon=$APP_ID
+Terminal=false
+Categories=Utility;
+OnlyShowIn=Cutefish;
+X-GNOME-Autostart-enabled=true
+EOF
+
+# CuteLight の設定ファイルにも autostart とショートカット既定値を反映する
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    cat > "$CONFIG_FILE" <<'CFG'
+[%General]
+autostart=true
+keepRunning=true
+launchWithShortcut=true
+shortcutModifiers=8
+shortcutKey=32
+CFG
+else
+    CONFIG_TMP="$CONFIG_FILE.install.$$"
+    awk '
+        BEGIN { section="[%General]"; insec=0; seen=0; hasA=0; hasK=0; hasL=0; hasM=0; hasKey=0 }
+        $0 == section { insec=1; seen=1; print; next }
+        insec && /^\[/ { 
+            if (!hasA) print "autostart=true"
+            if (!hasK) print "keepRunning=true"
+            if (!hasL) print "launchWithShortcut=true"
+            if (!hasM) print "shortcutModifiers=8"
+            if (!hasKey) print "shortcutKey=32"
+            insec=0
+        }
+        insec && /^autostart[[:space:]]*=/ { print "autostart=true"; hasA=1; next }
+        insec && /^keepRunning[[:space:]]*=/ { print; hasK=1; next }
+        insec && /^launchWithShortcut[[:space:]]*=/ { print; hasL=1; next }
+        insec && /^shortcutModifiers[[:space:]]*=/ { print; hasM=1; next }
+        insec && /^shortcutKey[[:space:]]*=/ { print; hasKey=1; next }
+        { print }
+        END {
+            if (insec) {
+                if (!hasA) print "autostart=true"
+                if (!hasK) print "keepRunning=true"
+                if (!hasL) print "launchWithShortcut=true"
+                if (!hasM) print "shortcutModifiers=8"
+                if (!hasKey) print "shortcutKey=32"
+            }
+            if (!seen) {
+                print section
+                print "autostart=true"
+                print "keepRunning=true"
+                print "launchWithShortcut=true"
+                print "shortcutModifiers=8"
+                print "shortcutKey=32"
+            }
+        }
+    ' "$CONFIG_FILE" > "$CONFIG_TMP" && mv "$CONFIG_TMP" "$CONFIG_FILE"
+fi
+
+if command -v update-desktop-database >/dev/null 2>&1; then
+    update-desktop-database "$DESKTOP_DIR" >/dev/null 2>&1 || true
+fi
+
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+    gtk-update-icon-cache -q -t -f "$HOME/.local/share/icons/hicolor" >/dev/null 2>&1 || true
+fi
+
+echo "Installed executable: $PREFIX/$BINARY"
+echo "Installed desktop entry: $DESKTOP_FILE"
+echo "Autostart entry: $AUTOSTART_FILE"
+echo "Other user settings are preserved."
+
+echo "Launching $APP_NAME..."
+nohup "$PREFIX/$BINARY" > "$STATE_DIR/launch.log" 2>&1 &
+disown || true
+
+echo "$APP_NAME launched. Press Escape to close it."
+echo
+# グローバルショートカット用ヘルパーを systemd サービスとして導入する
+if command -v sudo >/dev/null 2>&1; then
+    echo "Setting up the global shortcut helper (sudo password may be required)..."
+    HELPER_DIR="/usr/local/lib/cutelight"
+    HELPER_PATH="$HELPER_DIR/shortcut-helper.py"
+    SERVICE_PATH="/etc/systemd/system/cutelight-shortcut.service"
+    TARGET_USER="${SUDO_USER:-$USER}"
+    TARGET_UID="$(id -u "$TARGET_USER")"
+    HELPER_TMP="$(mktemp)"
+    SERVICE_TMP="$(mktemp)"
+    cat > "$HELPER_TMP" <<PY
+#!/usr/bin/env python3
+import os, pwd, subprocess, time
+from evdev import InputDevice, ecodes, list_devices
+
+TARGET_UID = ${TARGET_UID}
+TARGET_USER = pwd.getpwuid(TARGET_UID).pw_name
+BUS = f"unix:path=/run/user/{TARGET_UID}/bus"
+RUNTIME = f"/run/user/{TARGET_UID}"
+CONFIG = f"/home/{TARGET_USER}/.config/cutelight/cutelight.conf"
+CMD = ["/usr/sbin/runuser", "-u", TARGET_USER, "--", "${PREFIX}/${BINARY}", "--toggle"]
+MOD_MASK = {ecodes.KEY_LEFTMETA: 8, ecodes.KEY_RIGHTMETA: 8, ecodes.KEY_LEFTCTRL: 4, ecodes.KEY_RIGHTCTRL: 4,
+            ecodes.KEY_LEFTALT: 1, ecodes.KEY_RIGHTALT: 1, ecodes.KEY_LEFTSHIFT: 2, ecodes.KEY_RIGHTSHIFT: 2}
+# XKB keysym -> evdev keycode (common shortcuts)
+KEY_MAP = {
+    32: ecodes.KEY_SPACE, 65289: ecodes.KEY_TAB, 65293: ecodes.KEY_ENTER, 65307: ecodes.KEY_ESC,
+    65288: ecodes.KEY_BACKSPACE, 65535: ecodes.KEY_DELETE,
+    65362: ecodes.KEY_UP, 65364: ecodes.KEY_DOWN, 65361: ecodes.KEY_LEFT, 65363: ecodes.KEY_RIGHT,
+}
+KEY_MAP.update({ord(chr(c)): getattr(ecodes, f'KEY_{chr(c).upper()}') for c in range(ord('a'), ord('z')+1)})
+KEY_MAP.update({ord(str(d)): getattr(ecodes, f'KEY_{d}') for d in range(10)})
+KEY_MAP.update({0xffbe + i: getattr(ecodes, f'KEY_F{i+1}') for i in range(12)})
+
+
+def read_config():
+    enabled, mods, key = True, 8, 32
+    try:
+        for line in open(CONFIG, encoding="utf-8"):
+            line = line.strip()
+            if line.startswith("launchWithShortcut="):
+                enabled = line.split("=", 1)[1].strip().lower() == "true"
+            elif line.startswith("shortcutModifiers="):
+                mods = int(line.split("=", 1)[1].strip())
+            elif line.startswith("shortcutKey="):
+                key = int(line.split("=", 1)[1].strip(), 0)
+    except Exception:
+        pass
+    return enabled, mods, KEY_MAP.get(key, ecodes.KEY_SPACE)
+
+
+def keyboards():
+    devs = []
+    for path in list_devices():
+        try:
+            d = InputDevice(path)
+            caps = d.capabilities().get(ecodes.EV_KEY, [])
+            if ecodes.KEY_SPACE in caps and ecodes.KEY_A in caps:
+                devs.append(d)
+            else:
+                d.close()
+        except Exception:
+            pass
+    return devs
+
+
+def trigger():
+    env = os.environ.copy()
+    env["DBUS_SESSION_BUS_ADDRESS"] = BUS
+    env["XDG_RUNTIME_DIR"] = RUNTIME
+    env["HOME"] = f"/home/{TARGET_USER}"
+    env["PATH"] = "/usr/bin:/bin:/usr/sbin"
+    subprocess.Popen(CMD, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
+def main():
+    pressed, last, devs = set(), 0.0, keyboards()
+    while True:
+        enabled, want_mods, want_key = read_config()
+        if not devs:
+            time.sleep(2); devs = keyboards(); continue
+        for d in list(devs):
+            try:
+                while True:
+                    e = d.read_one()
+                    if e is None: break
+                    if e.type != ecodes.EV_KEY: continue
+                    if e.value == 1: pressed.add(e.code)
+                    elif e.value == 0: pressed.discard(e.code)
+                    else: continue
+                    if not enabled or e.value != 1 or e.code != want_key: continue
+                    mask = 0
+                    for k in pressed: mask |= MOD_MASK.get(k, 0)
+                    if mask == want_mods and time.monotonic() - last > 0.4:
+                        last = time.monotonic(); trigger()
+            except OSError:
+                try: d.close()
+                except Exception: pass
+                if d in devs: devs.remove(d)
+        time.sleep(0.02)
+
+
+if __name__ == "__main__":
+    main()
+PY
+    cat > "$SERVICE_TMP" <<UNIT
+[Unit]
+Description=CuteLight global shortcut helper
+After=graphical.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 ${HELPER_PATH}
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+    # sudo パスワードを求めてショートカットヘルパーを導入する
+    if sudo -v < /dev/tty; then
+        # ショートカットヘルパーに必要な python3-evdev を確認/導入する
+        if ! python3 -c "import evdev" >/dev/null 2>&1; then
+            sudo apt-get install -y --no-install-recommends python3-evdev >/dev/null 2>&1 || \
+                echo "warning: could not install python3-evdev; shortcut helper may not work"
+        fi
+        sudo mkdir -p "$HELPER_DIR"
+        sudo cp "$HELPER_TMP" "$HELPER_PATH"
+        sudo chmod 755 "$HELPER_PATH"
+        sudo cp "$SERVICE_TMP" "$SERVICE_PATH"
+        sudo systemctl daemon-reload
+        sudo systemctl enable --now cutelight-shortcut.service >/dev/null 2>&1 || \
+            echo "warning: could not enable cutelight-shortcut.service"
+        echo "Shortcut helper installed: $SERVICE_PATH"
+    else
+        echo "warning: skipped shortcut helper install (sudo required)"
+    fi
+    rm -f "$HELPER_TMP" "$SERVICE_TMP"
+else
+    echo "warning: sudo not found; skipped shortcut helper install"
+fi
+
+echo "Shortcut: Super+Space (default). You can change it in CuteLight Settings."
