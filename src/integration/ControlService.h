@@ -8,7 +8,7 @@ class Connection;
 class Object;
 } // namespace cutefish::base::dbus
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 // ランチャーや手動割り当てのショートカットから使う D-Bus 制御インターフェイス
 class ControlService
@@ -25,4 +25,4 @@ private:
     std::unique_ptr<cutefish::base::dbus::Object> m_object;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

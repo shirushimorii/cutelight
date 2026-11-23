@@ -15,10 +15,10 @@
 #include "window/MainWindow.h"
 #include "window/SettingsWindow.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 namespace {
-const cutefish::base::LogCategory logApplication("cutelight.application");
+const cutefish::base::LogCategory logApplication("cutefish-search.application");
 }
 
 Application::Application(int argc, char** argv)
@@ -33,8 +33,8 @@ Application::Application(int argc, char** argv)
     }
     m_showMainWindow = !m_showSettingsWindow && !m_startedHidden;
 
-    m_native.setApplicationId("com.mori.cutelight");
-    CF_INFO(logApplication) << "starting com.mori.cutelight";
+    m_native.setApplicationId("org.cutefish.search");
+    CF_INFO(logApplication) << "starting org.cutefish.search";
 }
 
 Application::~Application() = default;
@@ -63,8 +63,8 @@ std::optional<int> Application::forwardCommand(int argc, char** argv)
     if (!bus)
         return hideOnly ? std::optional<int>(0) : std::nullopt;
 
-    cutefish::base::dbus::Proxy control(bus, "com.mori.CuteLight", "/org/mori/CuteLight",
-                                        "org.mori.CuteLight");
+    cutefish::base::dbus::Proxy control(bus, "org.cutefish.Search", "/org/cutefish/Search",
+                                        "org.cutefish.Search");
     control.setTimeout(std::chrono::milliseconds(500));
     const auto reply = control.call(method);
     if (!reply.isError())
@@ -234,4 +234,4 @@ void Application::quit()
     m_native.quit();
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

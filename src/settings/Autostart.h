@@ -2,10 +2,10 @@
 
 #include <string>
 
-namespace CuteLight::Autostart {
+namespace CutefishSearch::Autostart {
 
 std::string desktopPath();
 
 void setEnabled(bool enabled);
 
-} // namespace CuteLight::Autostart
+} // namespace CutefishSearch::Autostart

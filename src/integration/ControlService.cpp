@@ -2,7 +2,7 @@
 
 #include "base/dbus.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 ControlService::ControlService(cutefish::base::dbus::Connection* bus,
                                std::function<void()> show,
@@ -13,9 +13,9 @@ ControlService::ControlService(cutefish::base::dbus::Connection* bus,
     if (!bus)
         return;
 
-    bus->requestName("com.mori.CuteLight");
+    bus->requestName("org.cutefish.Search");
     m_object = std::make_unique<cutefish::base::dbus::Object>(
-        bus, "/org/mori/CuteLight", "org.mori.CuteLight");
+        bus, "/org/cutefish/Search", "org.cutefish.Search");
     m_object->addMethod("Show", [show] {
         show();
         return true;
@@ -37,4 +37,4 @@ ControlService::ControlService(cutefish::base::dbus::Connection* bus,
 
 ControlService::~ControlService() = default;
 
-} // namespace CuteLight
+} // namespace CutefishSearch

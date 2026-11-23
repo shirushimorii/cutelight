@@ -8,7 +8,7 @@
 #include "ui/event.h"
 #include "ui/keys.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 namespace {
 
@@ -130,7 +130,7 @@ std::string Settings::defaultPath()
     const char* xdg = std::getenv("XDG_CONFIG_HOME");
     const char* home = std::getenv("HOME");
     std::string root = xdg && *xdg ? xdg : (home ? std::string(home) + "/.config" : std::string("."));
-    return root + "/cutelight/cutelight.conf";
+    return root + "/cutefish-search/cutefish-search.conf";
 }
 
 double Settings::positionRatio(SearchPosition position)
@@ -189,4 +189,4 @@ const char* Settings::appearanceName(AppearanceMode mode)
     return mode == AppearanceMode::Tinted ? "tinted" : "glassy";
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

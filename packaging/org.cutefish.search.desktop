@@ -1,0 +1,22 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Search
+GenericName=Desktop Search
+Comment=Spotlight-style search for Cutefish
+Exec=cutefish-search
+TryExec=cutefish-search
+Icon=org.cutefish.search
+Terminal=false
+Categories=Utility;
+OnlyShowIn=Cutefish;
+StartupNotify=true
+Actions=Settings;ToggleSearch;
+
+[Desktop Action Settings]
+Name=Settings
+Exec=cutefish-search --settings
+
+[Desktop Action ToggleSearch]
+Name=Toggle search
+Exec=cutefish-search --toggle

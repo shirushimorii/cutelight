@@ -6,7 +6,7 @@
 
 #include "DesignTokens.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 ClearButton::ClearButton()
 {
@@ -53,4 +53,4 @@ void ClearButton::pointerRelease(const cutefish::ui::PointerEvent&)
         onClicked();
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

@@ -5,7 +5,7 @@
 
 #include "ui/menu.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 // メニューバーに出すアプリケーションメニュー
 class MainMenu
@@ -30,4 +30,4 @@ private:
     std::unique_ptr<cutefish::ui::Menu> m_menu;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

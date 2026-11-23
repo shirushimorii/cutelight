@@ -6,7 +6,7 @@
 #include "base/timer.h"
 #include "ui/application.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 struct SettingsData;
 class ControlService;
@@ -56,4 +56,4 @@ private:
     bool m_settingsVisible = false;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

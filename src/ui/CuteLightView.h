@@ -7,15 +7,15 @@
 #include "search/SearchController.h"
 #include "ui/layout.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 class ResultsView;
 class SearchBox;
 
-class CuteLightView : public cutefish::ui::Column
+class CutefishSearchView : public cutefish::ui::Column
 {
 public:
-    CuteLightView();
+    CutefishSearchView();
 
     void relayout() { layout(); }
 
@@ -36,4 +36,4 @@ private:
     cutefish::base::Subscription m_themeChanged;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

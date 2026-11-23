@@ -16,10 +16,10 @@
 #include "ShortcutButton.h"
 #include "settings/Autostart.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 namespace {
-const cutefish::base::LogCategory logSettings("cutelight.settings");
+const cutefish::base::LogCategory logSettings("cutefish-search.settings");
 
 cutefish::ui::Label* addHeading(cutefish::ui::Column* column, const std::string& text)
 {
@@ -91,7 +91,7 @@ SettingsView::SettingsView(Settings& settings,
     header->setMinimizeVisible(false);
     header->setMaximizeVisible(false);
     header->setMaximizeEnabled(false);
-    auto* title = header->setContent<cutefish::ui::Label>("CuteLight settings");
+    auto* title = header->setContent<cutefish::ui::Label>("CutefishSearch settings");
     title->setFontSize(16);
     title->setWeight(600);
     cutefish::ui::LayoutHints titleHints;
@@ -104,13 +104,13 @@ SettingsView::SettingsView(Settings& settings,
     header->setLayoutHints(headerHints);
 
     addHeading(this, "Getting started");
-    m_autostart = addChild<cutefish::ui::Switch>("Open CuteLight when I sign in");
+    m_autostart = addChild<cutefish::ui::Switch>("Open CutefishSearch when I sign in");
     m_autostart->setChecked(m_data.autostart);
     m_autostart->onToggled = [this](bool checked) {
         m_data.autostart = checked;
     };
 
-    m_keepRunning = addChild<cutefish::ui::Switch>("Keep CuteLight running in the background");
+    m_keepRunning = addChild<cutefish::ui::Switch>("Keep CutefishSearch running in the background");
     m_keepRunning->setChecked(m_data.keepRunning);
     m_keepRunning->onToggled = [this](bool checked) {
         m_data.keepRunning = checked;
@@ -130,8 +130,8 @@ SettingsView::SettingsView(Settings& settings,
         m_data.shortcutKey = key;
     };
     m_shortcutNote = addNote(this,
-                             "Turn this on to use the shortcut. CuteLight runs a small helper in "
-                             "the background so the shortcut can show or hide CuteLight even when "
+                             "Turn this on to use the shortcut. CutefishSearch runs a small helper in "
+                             "the background so the shortcut can show or hide CutefishSearch even when "
                              "you are in another app.");
 
     addHeading(this, "Search window");
@@ -280,4 +280,4 @@ void SettingsView::saveAndClose()
         m_onClose();
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

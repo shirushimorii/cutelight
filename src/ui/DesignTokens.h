@@ -2,7 +2,7 @@
 
 #include "ui/geometry.h"
 
-namespace CuteLight::Tokens {
+namespace CutefishSearch::Tokens {
 
 namespace Window {
 inline constexpr double PreferredWidth = 760.0;
@@ -68,4 +68,4 @@ inline cutefish::ui::Color separator(bool dark)
 }
 } // namespace Palette
 
-} // namespace CuteLight::Tokens
+} // namespace CutefishSearch::Tokens

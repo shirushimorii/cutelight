@@ -12,7 +12,7 @@
 
 #include "ui/SettingsView.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 namespace {
 constexpr double kWidth = 540.0;
@@ -23,7 +23,7 @@ SettingsWindow::SettingsWindow(Settings& settings,
                                std::function<void(const SettingsData&)> onChanged,
                                std::function<void()> onClose)
 {
-    setTitle("CuteLight Settings");
+    setTitle("CutefishSearch Settings");
     setSkipTaskbar(false);
     setUserResizable(false);
     setLevel(cutefish::ui::WindowLevel::Floating);
@@ -87,4 +87,4 @@ void SettingsWindow::applyLayout()
     m_view->relayout();
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

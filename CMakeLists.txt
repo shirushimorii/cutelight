@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(CuteLight
+project(cutefish-search
     VERSION 0.1.0
-    DESCRIPTION "macOS Sequoia / Tahoe inspired Spotlight for Cutefish"
+    DESCRIPTION "Spotlight-style search for the Cutefish desktop"
     LANGUAGES CXX
 )
 
@@ -12,7 +12,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(CutefishToolkit REQUIRED)
 
-add_executable(cutelight
+add_executable(cutefish-search
     src/main.cpp
     src/application/Application.cpp
     src/integration/ControlService.cpp
@@ -23,7 +23,7 @@ add_executable(cutelight
     src/search/SearchController.cpp
     src/window/MainWindow.cpp
     src/window/SettingsWindow.cpp
-    src/ui/CuteLightView.cpp
+    src/ui/CutefishSearchView.cpp
     src/ui/SearchBox.cpp
     src/ui/ResultsView.cpp
     src/ui/ClearButton.cpp
@@ -31,10 +31,10 @@ add_executable(cutelight
     src/ui/SettingsView.cpp
 )
 
-target_include_directories(cutelight PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_include_directories(cutefish-search PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-target_link_libraries(cutelight PRIVATE Cutefish::Toolkit)
+target_link_libraries(cutefish-search PRIVATE Cutefish::Toolkit)
 
-target_compile_options(cutelight PRIVATE -Wall -Wextra -Wpedantic)
+target_compile_options(cutefish-search PRIVATE -Wall -Wextra -Wpedantic)
 
-install(TARGETS cutelight RUNTIME DESTINATION bin)
+install(TARGETS cutefish-search RUNTIME DESTINATION bin)

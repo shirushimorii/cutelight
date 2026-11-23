@@ -56,7 +56,7 @@ if [[ $status -ne 0 ]]; then
 fi
 
 cp -R "$SCRIPT_DIR/assets" "$BUILD_DIR/runtime/assets"
-cp "$SCRIPT_DIR/packaging/com.mori.cutelight.desktop" "$BUILD_DIR/packaging/"
+cp "$SCRIPT_DIR/packaging/org.cutefish.search.desktop" "$BUILD_DIR/packaging/"
 if [[ -f "$SCRIPT_DIR/LICENSE" ]]; then
     cp "$SCRIPT_DIR/LICENSE" "$BUILD_DIR/LICENSE"
 fi
@@ -70,7 +70,7 @@ chmod +x "$BUILD_DIR/install.sh"
 {
     echo
     echo "Finished: $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-    echo "Executable: $BUILD_DIR/cutelight"
+    echo "Executable: $BUILD_DIR/cutefish-search"
     echo "Installer: $BUILD_DIR/install.sh"
 } >> "$LOG_FILE"
 

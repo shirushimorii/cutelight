@@ -13,9 +13,9 @@ namespace cutefish::ui {
 class Animation;
 }
 
-namespace CuteLight {
+namespace CutefishSearch {
 
-class CuteLightView;
+class CutefishSearchView;
 
 class MainWindow : public cutefish::ui::Window
 {
@@ -45,7 +45,7 @@ private:
     void animateExpansion(bool expanded);
     void closeAnimated();
 
-    CuteLightView* m_view = nullptr;
+    CutefishSearchView* m_view = nullptr;
     std::unique_ptr<cutefish::ui::Animation> m_animation;
     std::unique_ptr<cutefish::ui::Animation> m_sizeAnimation;
     cutefish::base::Subscription m_themeChanged;
@@ -64,4 +64,4 @@ private:
     bool m_compositorGlass = false;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

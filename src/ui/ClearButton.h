@@ -6,7 +6,7 @@
 #include "ui/color_mixer.h"
 #include "ui/view.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 // 入力があるときだけ表示される小さな消去ボタン
 class ClearButton : public cutefish::ui::View
@@ -32,4 +32,4 @@ protected:
     void pointerRelease(const cutefish::ui::PointerEvent& event) override;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

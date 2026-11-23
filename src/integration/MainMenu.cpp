@@ -2,19 +2,19 @@
 
 #include "ui/menu.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 MainMenu::MainMenu(Actions actions)
 {
     m_menu = std::make_unique<cutefish::ui::Menu>();
 
-    auto* application = m_menu->addSubmenu("CuteLight");
+    auto* application = m_menu->addSubmenu("CutefishSearch");
     application->setRole(cutefish::ui::MenuRole::Application);
     application->addItem("Show search", actions.show);
     application->addItem("Hide search", actions.hide);
     application->addSeparator();
     application->addItem("Settings", actions.settings, "Ctrl+,");
-    application->addItem("Quit CuteLight", actions.quit);
+    application->addItem("Quit CutefishSearch", actions.quit);
 
     auto* search = m_menu->addSubmenu("Search");
     search->addItem("Clear query", actions.clear);
@@ -26,4 +26,4 @@ MainMenu::MainMenu(Actions actions)
 
 MainMenu::~MainMenu() = default;
 
-} // namespace CuteLight
+} // namespace CutefishSearch

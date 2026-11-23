@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 enum class SearchPosition {
     Top,
@@ -27,7 +27,7 @@ struct SettingsData {
     SearchPosition position = SearchPosition::TopMid;
     AppearanceMode appearance = AppearanceMode::Glassy;
     int tint = 55;
-    std::string placeholder = "Cutelight Search";
+    std::string placeholder = "Cutefish Search Search";
 };
 
 class Settings
@@ -50,4 +50,4 @@ private:
     SettingsData m_data;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

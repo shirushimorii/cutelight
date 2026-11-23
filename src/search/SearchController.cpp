@@ -16,7 +16,7 @@
 #include "base/process.h"
 #include "ui/clipboard.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 namespace {
 
@@ -472,4 +472,4 @@ bool SearchController::activate(size_t index) const
     return false;
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

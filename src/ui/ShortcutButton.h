@@ -9,7 +9,7 @@ namespace cutefish::ui {
 struct KeyEvent;
 }
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 // 押下後にショートカットのキー入力を待ち受けるボタン
 class ShortcutButton : public cutefish::ui::Button
@@ -26,4 +26,4 @@ private:
     bool m_capturing = false;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

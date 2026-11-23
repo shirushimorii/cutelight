@@ -7,7 +7,7 @@
 #include "ui/icon.h"
 #include "ui/view.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 namespace {
 
@@ -17,7 +17,7 @@ public:
     explicit TrayView(cutefish::ui::StatusItem& item)
         : m_item(item)
     {
-        setName("CuteLightTrayIcon");
+        setName("CutefishSearchTrayIcon");
         m_icon = addChild<cutefish::ui::Icon>("search", 16);
         m_icon->setColor(m_item.foregroundColor());
     }
@@ -64,7 +64,7 @@ private:
 
 TrayIcon::TrayIcon(Actions actions)
 {
-    m_item.setIdentifier("com.mori.cutelight.tray");
+    m_item.setIdentifier("org.cutefish.search.tray");
     m_item.setWidth(28);
 
     auto view = std::make_unique<TrayView>(m_item);
@@ -86,7 +86,7 @@ TrayIcon::TrayIcon(Actions actions)
     m_menu.addItem("Clear query", actions.clear);
     m_menu.addSeparator();
     m_menu.addItem("Settings", actions.settings);
-    m_menu.addItem("Quit CuteLight", actions.quit);
+    m_menu.addItem("Quit CutefishSearch", actions.quit);
 }
 
 TrayIcon::~TrayIcon() = default;
@@ -101,4 +101,4 @@ void TrayIcon::openMenu()
     m_menu.popupAt(&m_item.window(), {0, m_item.window().size().height});
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

@@ -2,7 +2,7 @@
 
 ## Native stack
 
-CuteLight uses the installed Cutefish Toolkit directly:
+CutefishSearch uses the installed Cutefish Toolkit directly:
 
 - `cutefish::ui::Application` — event loop, Wayland connection, GPU context, fonts.
 - `cutefish::ui::Window` — frameless Wayland surface with compositor glass, shadow, and placement.
@@ -25,7 +25,7 @@ used.
 2. **MainWindow** owns material, placement, responsive sizing, window-level
    shortcuts, the open/close/expansion animations, and the focus-loss path that
   hides the search bar when the user clicks outside it.
-3. **CuteLightView** owns the stationary 76 px search row, its separator, and a
+3. **CutefishSearchView** owns the stationary 76 px search row, its separator, and a
    real results viewport. It contains no placeholder cards or fake results.
 4. **SearchBox** arranges the search icon, native text field, and clear button
    on one horizontal axis using a `Row` layout. Escape is intercepted by the
@@ -42,7 +42,7 @@ used.
    the hint text and appearance to the live search row. **Close** discards
    pending edits.
 8. **ControlService** exports the D-Bus methods used by manual launchers.
-   `Application::forwardCommand()` lets `cutelight --toggle`, `--show`,
+   `Application::forwardCommand()` lets `cutefish-search --toggle`, `--show`,
    `--hide`, and `--settings` reuse an already-running instance.
 9. **MainMenu / TrayIcon** provide native menu-bar and tray actions. The menu
    bar is installed while the search field is focused; the tray icon stays

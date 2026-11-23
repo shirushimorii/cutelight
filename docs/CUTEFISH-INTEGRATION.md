@@ -27,19 +27,19 @@ as “launch an arbitrary executable” or to receive `Super+Space` in a third-p
 Wayland client. Ordinary Wayland keyboard events are delivered only to the
 focused window, so an application cannot listen for a global hotkey itself.
 
-Therefore CuteLight does not claim to provide `Super+Space` automatically.
+Therefore CutefishSearch does not claim to provide `Super+Space` automatically.
 
 ## Supported options
 
-1. Launch CuteLight from the desktop entry, the dock, or the terminal.
+1. Launch CutefishSearch from the desktop entry, the dock, or the terminal.
 2. Assign an existing unused compositor accelerator to an action that can open
    the desktop search experience, if the user wants to reconfigure the desktop.
    This changes a system action and is intentionally left to the user.
-3. CuteLight exports `com.mori.CuteLight` on `/org/mori/CuteLight` with
+3. CutefishSearch exports `org.cutefish.Search` on `/org/cutefish/Search` with
    `Show`, `Hide`, `Toggle`, and `ShowSettings`. A small root helper service
-   (`cutelight-shortcut.service`) reads the saved shortcut from
-   `~/.config/cutelight/cutelight.conf` and runs `cutelight --toggle` when the
-   key is pressed. `cutelight --toggle` starts the app when needed, otherwise it
+   (`cutefish-search-shortcut.service`) reads the saved shortcut from
+   `~/.config/cutefish-search/cutefish-search.conf` and runs `cutefish-search --toggle` when the
+   key is pressed. `cutefish-search --toggle` starts the app when needed, otherwise it
    calls the running instance's `Toggle` method. `--show`, `--hide`, and
    `--settings` work the same way. The installer adds a **Toggle search** desktop
    action for launchers that prefer desktop actions. This keeps the original

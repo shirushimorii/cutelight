@@ -14,7 +14,7 @@ class Switch;
 class TextField;
 } // namespace cutefish::ui
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 class ShortcutButton;
 
@@ -58,4 +58,4 @@ private:
     cutefish::ui::Button* m_saveButton = nullptr;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

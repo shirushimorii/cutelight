@@ -4,16 +4,16 @@ set -u
 
 SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 EMBEDDED_BUILD_DIR="@BUILD_DIR@"
-APP_ID="com.mori.cutelight"
-APP_NAME="CuteLight"
-BINARY="cutelight"
-PREFIX="$HOME/.local/opt/cutelight"
+APP_ID="org.cutefish.search"
+APP_NAME="CutefishSearch"
+BINARY="cutefish-search"
+PREFIX="$HOME/.local/opt/cutefish-search"
 DESKTOP_DIR="$HOME/.local/share/applications"
 ICON_DIR="$HOME/.local/share/icons/hicolor/scalable/apps"
-STATE_DIR="$HOME/.local/state/cutelight"
+STATE_DIR="$HOME/.local/state/cutefish-search"
 CONFIG_ROOT="${XDG_CONFIG_HOME:-$HOME/.config}"
-CONFIG_DIR="$CONFIG_ROOT/cutelight"
-CONFIG_FILE="$CONFIG_DIR/cutelight.conf"
+CONFIG_DIR="$CONFIG_ROOT/cutefish-search"
+CONFIG_FILE="$CONFIG_DIR/cutefish-search.conf"
 AUTOSTART_DIR="$CONFIG_ROOT/autostart"
 AUTOSTART_FILE="$AUTOSTART_DIR/$APP_ID.desktop"
 
@@ -73,8 +73,8 @@ Version=1.0
 Name=$APP_NAME
 GenericName=Desktop Search
 Comment=macOS-style Spotlight search for Cutefish
-Exec=cutelight
-TryExec=cutelight
+Exec=cutefish-search
+TryExec=cutefish-search
 Icon=$APP_ID
 Terminal=false
 Categories=Utility;
@@ -124,7 +124,7 @@ OnlyShowIn=Cutefish;
 X-GNOME-Autostart-enabled=true
 EOF
 
-# CuteLight の設定ファイルにも autostart とショートカット既定値を反映する
+# CutefishSearch の設定ファイルにも autostart とショートカット既定値を反映する
 if [[ ! -f "$CONFIG_FILE" ]]; then
     cat > "$CONFIG_FILE" <<'CFG'
 [%General]
@@ -195,9 +195,9 @@ echo
 # グローバルショートカット用ヘルパーを systemd サービスとして導入する
 if command -v sudo >/dev/null 2>&1; then
     echo "Setting up the global shortcut helper (sudo password may be required)..."
-    HELPER_DIR="/usr/local/lib/cutelight"
+    HELPER_DIR="/usr/local/lib/cutefish-search"
     HELPER_PATH="$HELPER_DIR/shortcut-helper.py"
-    SERVICE_PATH="/etc/systemd/system/cutelight-shortcut.service"
+    SERVICE_PATH="/etc/systemd/system/cutefish-search-shortcut.service"
     TARGET_USER="${SUDO_USER:-$USER}"
     TARGET_UID="$(id -u "$TARGET_USER")"
     HELPER_TMP="$(mktemp)"
@@ -211,7 +211,7 @@ TARGET_UID = ${TARGET_UID}
 TARGET_USER = pwd.getpwuid(TARGET_UID).pw_name
 BUS = f"unix:path=/run/user/{TARGET_UID}/bus"
 RUNTIME = f"/run/user/{TARGET_UID}"
-CONFIG = f"/home/{TARGET_USER}/.config/cutelight/cutelight.conf"
+CONFIG = f"/home/{TARGET_USER}/.config/cutefish-search/cutefish-search.conf"
 CMD = ["/usr/sbin/runuser", "-u", TARGET_USER, "--", "${PREFIX}/${BINARY}", "--toggle"]
 MOD_MASK = {ecodes.KEY_LEFTMETA: 8, ecodes.KEY_RIGHTMETA: 8, ecodes.KEY_LEFTCTRL: 4, ecodes.KEY_RIGHTCTRL: 4,
             ecodes.KEY_LEFTALT: 1, ecodes.KEY_RIGHTALT: 1, ecodes.KEY_LEFTSHIFT: 2, ecodes.KEY_RIGHTSHIFT: 2}
@@ -298,7 +298,7 @@ if __name__ == "__main__":
 PY
     cat > "$SERVICE_TMP" <<UNIT
 [Unit]
-Description=CuteLight global shortcut helper
+Description=CutefishSearch global shortcut helper
 After=graphical.target
 
 [Service]
@@ -323,8 +323,8 @@ UNIT
         sudo chmod 755 "$HELPER_PATH"
         sudo cp "$SERVICE_TMP" "$SERVICE_PATH"
         sudo systemctl daemon-reload
-        sudo systemctl enable --now cutelight-shortcut.service >/dev/null 2>&1 || \
-            echo "warning: could not enable cutelight-shortcut.service"
+        sudo systemctl enable --now cutefish-search-shortcut.service >/dev/null 2>&1 || \
+            echo "warning: could not enable cutefish-search-shortcut.service"
         echo "Shortcut helper installed: $SERVICE_PATH"
     else
         echo "warning: skipped shortcut helper install (sudo required)"
@@ -334,4 +334,4 @@ else
     echo "warning: sudo not found; skipped shortcut helper install"
 fi
 
-echo "Shortcut: Super+Space (default). You can change it in CuteLight Settings."
+echo "Shortcut: Super+Space (default). You can change it in CutefishSearch Settings."

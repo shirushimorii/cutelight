@@ -5,7 +5,7 @@
 #include "ui/menu.h"
 #include "ui/status_item.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 // メニューバーに常駐するアプリケーションアイコン
 class TrayIcon
@@ -32,4 +32,4 @@ private:
     cutefish::ui::Menu m_menu;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

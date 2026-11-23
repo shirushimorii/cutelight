@@ -10,16 +10,16 @@
 #include "ui/keys.h"
 #include "ui/theme.h"
 
-#include "ui/CuteLightView.h"
+#include "ui/CutefishSearchView.h"
 #include "ui/DesignTokens.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 MainWindow::MainWindow(const SettingsData& settings)
     : m_settings(settings)
     , m_positionRatio(Settings::positionRatio(settings.position))
 {
-    setTitle("CuteLight");
+    setTitle("CutefishSearch");
     setSkipTaskbar(true);
     setUserResizable(false);
     setLevel(cutefish::ui::WindowLevel::Floating);
@@ -31,7 +31,7 @@ MainWindow::MainWindow(const SettingsData& settings)
 
     updateAppearance();
 
-    auto view = std::make_unique<CuteLightView>();
+    auto view = std::make_unique<CutefishSearchView>();
     m_view = view.get();
     setContentView(std::move(view));
     m_view->setPlaceholder(m_settings.placeholder);
@@ -339,4 +339,4 @@ void MainWindow::closeAnimated()
     animateTo(0);
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

@@ -1,4 +1,4 @@
-#include "CuteLightView.h"
+#include "CutefishSearchView.h"
 
 #include <utility>
 
@@ -15,7 +15,7 @@
 #include "ResultsView.h"
 #include "SearchBox.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 namespace {
 
@@ -43,10 +43,10 @@ protected:
 
 } // namespace
 
-CuteLightView::CuteLightView()
+CutefishSearchView::CutefishSearchView()
     : m_searchController(&cutefish::ui::Application::instance()->loop())
 {
-    setName("CuteLightView");
+    setName("CutefishSearchView");
     setClipsChildren(true);
     setChildClipRadius(Tokens::Window::Radius);
     setSpacing(0);
@@ -117,19 +117,19 @@ CuteLightView::CuteLightView()
     });
 }
 
-void CuteLightView::focusSearch()
+void CutefishSearchView::focusSearch()
 {
     if (m_search)
         m_search->focus();
 }
 
-void CuteLightView::clearSearch()
+void CutefishSearchView::clearSearch()
 {
     if (m_search)
         m_search->clear();
 }
 
-void CuteLightView::setExpanded(bool expanded)
+void CutefishSearchView::setExpanded(bool expanded)
 {
     if (m_separator)
         m_separator->setVisible(expanded);
@@ -138,10 +138,10 @@ void CuteLightView::setExpanded(bool expanded)
     requestLayout();
 }
 
-void CuteLightView::setPlaceholder(std::string text)
+void CutefishSearchView::setPlaceholder(std::string text)
 {
     if (m_search)
         m_search->setPlaceholder(std::move(text));
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

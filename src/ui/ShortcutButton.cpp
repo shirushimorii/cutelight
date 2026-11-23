@@ -7,7 +7,7 @@
 
 #include "settings/Settings.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 ShortcutButton::ShortcutButton(std::string text)
     : Button(text)
@@ -41,4 +41,4 @@ bool ShortcutButton::keyPress(const cutefish::ui::KeyEvent& event)
     return true;
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

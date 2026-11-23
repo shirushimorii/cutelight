@@ -16,7 +16,7 @@ busctl --user introspect org.cutefish.Shortcuts1 /org/cutefish/Shortcuts1
 ```bash
 ./build.sh Debug
 cd builds/buildN
-./cutelight
+./cutefish-search
 ```
 
 To test installation:

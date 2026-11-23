@@ -13,7 +13,7 @@
 #include "DesignTokens.h"
 #include "search/SearchController.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 namespace {
 
@@ -181,4 +181,4 @@ void ResultsView::activateSelected()
     onActivated(m_selected);
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

@@ -4,7 +4,7 @@
 
 #include "ui/window.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 class SettingsView;
 struct SettingsData;
@@ -26,4 +26,4 @@ private:
     SettingsView* m_view = nullptr;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

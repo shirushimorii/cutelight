@@ -12,7 +12,7 @@ class Row;
 class TextField;
 } // namespace cutefish::ui
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 class ClearButton;
 
@@ -43,4 +43,4 @@ private:
     ClearButton* m_clear = nullptr;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

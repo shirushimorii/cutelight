@@ -5,7 +5,7 @@
 #include <fstream>
 #include <unistd.h>
 
-namespace CuteLight::Autostart {
+namespace CutefishSearch::Autostart {
 
 namespace {
 
@@ -17,7 +17,7 @@ std::string homeDirectory()
 
 std::string executablePath()
 {
-    const std::string installed = homeDirectory() + "/.local/opt/cutelight/cutelight";
+    const std::string installed = homeDirectory() + "/.local/opt/cutefish-search/cutefish-search";
     if (std::filesystem::exists(installed))
         return installed;
 
@@ -27,7 +27,7 @@ std::string executablePath()
         buffer[length] = '\0';
         return std::string(buffer);
     }
-    return "cutelight";
+    return "cutefish-search";
 }
 
 } // namespace
@@ -36,7 +36,7 @@ std::string desktopPath()
 {
     const char* config = std::getenv("XDG_CONFIG_HOME");
     std::string root = config && *config ? config : homeDirectory() + "/.config";
-    return root + "/autostart/com.mori.cutelight.desktop";
+    return root + "/autostart/org.cutefish.search.desktop";
 }
 
 void setEnabled(bool enabled)
@@ -59,15 +59,15 @@ void setEnabled(bool enabled)
     file << "[Desktop Entry]\n"
          << "Type=Application\n"
          << "Version=1.0\n"
-         << "Name=CuteLight\n"
+         << "Name=CutefishSearch\n"
          << "Comment=macOS-style Spotlight search for Cutefish\n"
          << "Exec=\"" << executablePath() << "\" --autostart\n"
          << "TryExec=" << executablePath() << "\n"
-         << "Icon=com.mori.cutelight\n"
+         << "Icon=org.cutefish.search\n"
          << "Terminal=false\n"
          << "Categories=Utility;\n"
          << "OnlyShowIn=Cutefish;\n"
          << "X-GNOME-Autostart-enabled=true\n";
 }
 
-} // namespace CuteLight::Autostart
+} // namespace CutefishSearch::Autostart

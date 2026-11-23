@@ -13,7 +13,7 @@ class Label;
 class ThemeIcon;
 } // namespace cutefish::ui
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 struct SearchResult;
 
@@ -36,4 +36,4 @@ private:
     bool m_hasSelection = false;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch

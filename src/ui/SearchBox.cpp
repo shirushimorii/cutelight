@@ -14,7 +14,7 @@
 #include "ClearButton.h"
 #include "DesignTokens.h"
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 namespace {
 
@@ -72,7 +72,7 @@ SearchBox::SearchBox()
             onFocusChanged(focused);
     };
     m_text = field;
-    m_text->setPlaceholder("Cutelight Search");
+    m_text->setPlaceholder("Cutefish Search Search");
     m_text->setFontSize(Tokens::Search::FontSize);
     m_text->setFontWeight(Tokens::Search::FontWeight);
     m_text->setFrameVisible(false);
@@ -148,4 +148,4 @@ void SearchBox::updateClearButton()
     m_clear->setVisible(!m_text->text().empty());
 }
 
-} // namespace CuteLight
+} // namespace CutefishSearch

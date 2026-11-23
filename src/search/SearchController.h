@@ -12,7 +12,7 @@ class EventLoop;
 struct DesktopEntry;
 } // namespace cutefish::base
 
-namespace CuteLight {
+namespace CutefishSearch {
 
 enum class SearchResultKind {
     Application,
@@ -56,4 +56,4 @@ private:
     cutefish::base::Subscription m_registryChanged;
 };
 
-} // namespace CuteLight
+} // namespace CutefishSearch
