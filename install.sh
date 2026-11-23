@@ -34,10 +34,10 @@ for cmd in git cmake g++ pkg-config; do
   fi
 done
 
-if ! pkg-config --exists cutefish-toolkit 2>/dev/null && \
-   ! [ -f /usr/lib/cmake/CutefishToolkit/CutefishToolkitConfig.cmake ]; then
-  echo "エラー: cutefish-toolkit の開発パッケージが見つかりません。" >&2
-  echo "インストールしてください: sudo apt-get install -y cutefish-toolkit-dev" >&2
+if ! find /usr/lib -name 'CutefishToolkitConfig.cmake' 2>/dev/null | grep -q . && \
+   ! dpkg -l 2>/dev/null | grep -q '^ii\s\+cutefish-toolkit\s'; then
+  echo "エラー: Cutefish Toolkit が見つかりません。" >&2
+  echo "Cutefish OS に cutefish-toolkit パッケージをインストールしてください。" >&2
   exit 1
 fi
 
