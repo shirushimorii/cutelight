@@ -163,6 +163,11 @@ std::string Settings::shortcutText(uint32_t modifiers, uint32_t key)
         text += "Alt+";
     if (modifiers & ShiftModifier)
         text += "Shift+";
+    if (key == 0) {
+        if (!text.empty())
+            text.pop_back(); // 末尾の '+' を取り除く
+        return text.empty() ? std::string("None") : text;
+    }
     text += keyName(key);
     return text;
 }

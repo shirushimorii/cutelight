@@ -2,6 +2,8 @@
 
 Spotlight-style desktop search for the Cutefish desktop, built natively with Cutefish Toolkit.
 
+[日本語 README](README.ja.md)
+
 > **Status:** proposal/upstream-preparation branch. This repository started as `cutelight` and is being reshaped to match CutefishOS conventions.
 
 ## Features
@@ -43,7 +45,7 @@ The installer installs to `~/.local/opt/cutefish-search/`, registers the desktop
 ## One-command install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/shirushimorii/cutelight/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/shirushimorii/cutelight/upstream-proposal/install.sh | bash
 ```
 
 ## Usage
@@ -54,7 +56,13 @@ curl -fsSL https://raw.githubusercontent.com/shirushimorii/cutelight/main/instal
 - Press `Escape` or click outside to hide the window.
 - `Ctrl+,` opens settings.
 
-## Global shortcut note
+## Global shortcut
+
+- The default shortcut is **Super+Space**. Enable it in settings and click the shortcut button to record a new combination (press a modifier first, then the key, for example `Ctrl` then `Space`). A modifier alone such as `Super` is also supported; `Escape` cancels.
+- The window opens with the search field focused, including when opened from the shortcut.
+- Modifier bits follow Cutefish Toolkit (`Shift=1`, `Control=2`, `Alt=4`, `Super=8`) so settings and the helper agree.
+
+## Upstream note
 
 Cutefish currently does not expose a public arbitrary-global-shortcut API for third-party apps. The current implementation includes an optional helper service used by the installer to make the configured shortcut work. For upstream inclusion, this should be reviewed and replaced by a compositor-supported shortcut mechanism when available.
 

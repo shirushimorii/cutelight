@@ -38,6 +38,7 @@ public:
 private:
     void applySettings(const SettingsData& data);
     void setSearchFocused(bool focused);
+    void scheduleSearchFocus();
     void hideAfterOutsideClick();
     void quit();
 
@@ -49,6 +50,8 @@ private:
     std::unique_ptr<MainMenu> m_mainMenu;
     std::unique_ptr<TrayIcon> m_tray;
     std::unique_ptr<cutefish::base::Timer> m_outsideClickTimer;
+    std::unique_ptr<cutefish::base::Timer> m_focusTimer;
+    int m_focusRetries = 0;
     bool m_showMainWindow = true;
     bool m_showSettingsWindow = false;
     bool m_startedHidden = false;

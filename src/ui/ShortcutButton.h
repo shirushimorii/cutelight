@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <functional>
 #include <string>
 
@@ -18,12 +19,18 @@ public:
     explicit ShortcutButton(std::string text = {});
 
     bool keyPress(const cutefish::ui::KeyEvent& event) override;
+    bool keyRelease(const cutefish::ui::KeyEvent& event) override;
 
     std::function<void(uint32_t modifiers, uint32_t key)> onCaptured;
 
 private:
+    static bool isModifierKey(uint32_t key);
+    void finish(uint32_t modifiers, uint32_t key);
+    void cancel();
+
     std::string m_idleText;
     bool m_capturing = false;
+    uint32_t m_pendingModifiers = 0;
 };
 
 } // namespace CutefishSearch

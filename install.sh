@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # CutefishSearch - Cutefish OS 専用インストーラー
-# 使い方: curl -fsSL https://raw.githubusercontent.com/shirushimorii/cutefish-search/main/install.sh | bash
+# 使い方: curl -fsSL https://raw.githubusercontent.com/shirushimorii/cutelight/upstream-proposal/install.sh | bash
 
 set -euo pipefail
 
 APP_NAME="CutefishSearch"
-REPO_URL="https://github.com/shirushimorii/cutefish-search.git"
+REPO_URL="https://github.com/shirushimorii/cutelight.git"
 TMP_DIR="$(mktemp -d)"
-BRANCH="${CUTEFISH_SEARCH_BRANCH:-main}"
+BRANCH="${CUTEFISH_SEARCH_BRANCH:-upstream-proposal}"
 
 cleanup() {
   rm -rf "$TMP_DIR"
