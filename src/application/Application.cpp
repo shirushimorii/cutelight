@@ -88,6 +88,19 @@ int Application::run()
         hideAfterOutsideClick();
     };
 
+    // Wayland では activate() の直後にキーボードフォーカスが
+    // 入らないことがあるため、表示後に少しだけ再試行する。
+    m_focusTimer = std::make_unique<cutefish::base::Timer>(&m_native.loop());
+    m_focusTimer->setSingleShot(true);
+    m_focusTimer->onTimeout = [this] {
+        if (!m_mainWindowVisible || !m_window)
+            return;
+        m_window->activate();
+        m_window->focusSearch();
+        if (++m_focusRetries < 3)
+            m_focusTimer->start(std::chrono::milliseconds(80));
+    };
+
     m_window->onHidden = [this] {
         m_mainWindowVisible = false;
         setSearchFocused(false);
@@ -182,6 +195,14 @@ void Application::toggleWindow()
         showWindow();
 }
 
+void Application::scheduleSearchFocus()
+{
+    if (!m_focusTimer)
+        return;
+    m_focusRetries = 0;
+    m_focusTimer->start(std::chrono::milliseconds(60));
+}
+
 void Application::showWindow()
 {
     if (!m_window)
@@ -194,12 +215,16 @@ void Application::showWindow()
         if (m_window->isVisible())
             m_window->focusSearch();
     }
+    // ショートカットから開いた場合も入力欄へ確実にフォーカスする
+    scheduleSearchFocus();
 }
 
 void Application::hideWindow()
 {
     if (!m_window || !m_mainWindowVisible)
         return;
+    if (m_focusTimer)
+        m_focusTimer->stop();
     m_window->hideVisually();
     m_mainWindowVisible = false;
     // 非表示時はフォーカスアウトが来ないため、メニューバーを明示的に外す

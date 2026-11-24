@@ -213,13 +213,18 @@ BUS = f"unix:path=/run/user/{TARGET_UID}/bus"
 RUNTIME = f"/run/user/{TARGET_UID}"
 CONFIG = f"/home/{TARGET_USER}/.config/cutelight/cutelight.conf"
 CMD = ["/usr/sbin/runuser", "-u", TARGET_USER, "--", "${PREFIX}/${BINARY}", "--toggle"]
-MOD_MASK = {ecodes.KEY_LEFTMETA: 8, ecodes.KEY_RIGHTMETA: 8, ecodes.KEY_LEFTCTRL: 4, ecodes.KEY_RIGHTCTRL: 4,
-            ecodes.KEY_LEFTALT: 1, ecodes.KEY_RIGHTALT: 1, ecodes.KEY_LEFTSHIFT: 2, ecodes.KEY_RIGHTSHIFT: 2}
+# Cutefish Toolkit modifier bits: Shift=1, Control=2, Alt=4, Super=8.
+MOD_MASK = {ecodes.KEY_LEFTSHIFT: 1, ecodes.KEY_RIGHTSHIFT: 1,
+            ecodes.KEY_LEFTCTRL: 2, ecodes.KEY_RIGHTCTRL: 2,
+            ecodes.KEY_LEFTALT: 4, ecodes.KEY_RIGHTALT: 4,
+            ecodes.KEY_LEFTMETA: 8, ecodes.KEY_RIGHTMETA: 8}
 # XKB keysym -> evdev keycode (common shortcuts)
 KEY_MAP = {
     32: ecodes.KEY_SPACE, 65289: ecodes.KEY_TAB, 65293: ecodes.KEY_ENTER, 65307: ecodes.KEY_ESC,
     65288: ecodes.KEY_BACKSPACE, 65535: ecodes.KEY_DELETE,
     65362: ecodes.KEY_UP, 65364: ecodes.KEY_DOWN, 65361: ecodes.KEY_LEFT, 65363: ecodes.KEY_RIGHT,
+    0xff50: ecodes.KEY_HOME, 0xff57: ecodes.KEY_END,
+    0xff55: ecodes.KEY_PAGEUP, 0xff56: ecodes.KEY_PAGEDOWN, 0xff63: ecodes.KEY_INSERT,
 }
 KEY_MAP.update({ord(chr(c)): getattr(ecodes, f'KEY_{chr(c).upper()}') for c in range(ord('a'), ord('z')+1)})
 KEY_MAP.update({ord(str(d)): getattr(ecodes, f'KEY_{d}') for d in range(10)})
@@ -239,7 +244,8 @@ def read_config():
                 key = int(line.split("=", 1)[1].strip(), 0)
     except Exception:
         pass
-    return enabled, mods, KEY_MAP.get(key, ecodes.KEY_SPACE)
+    # shortcutKey == 0 means a modifier-only shortcut (Super alone, etc.).
+    return enabled, mods, 0 if key == 0 else KEY_MAP.get(key, ecodes.KEY_SPACE)
 
 
 def keyboards():
@@ -281,7 +287,8 @@ def main():
                     if e.value == 1: pressed.add(e.code)
                     elif e.value == 0: pressed.discard(e.code)
                     else: continue
-                    if not enabled or e.value != 1 or e.code != want_key: continue
+                    if not enabled or e.value != 1: continue
+                    if want_key and e.code != want_key: continue
                     mask = 0
                     for k in pressed: mask |= MOD_MASK.get(k, 0)
                     if mask == want_mods and time.monotonic() - last > 0.4:
