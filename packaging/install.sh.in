@@ -299,7 +299,7 @@ PY
     cat > "$SERVICE_TMP" <<UNIT
 [Unit]
 Description=CutefishSearch global shortcut helper
-After=graphical.target
+After=multi-user.target
 
 [Service]
 Type=simple
@@ -322,6 +322,7 @@ UNIT
         sudo cp "$HELPER_TMP" "$HELPER_PATH"
         sudo chmod 755 "$HELPER_PATH"
         sudo cp "$SERVICE_TMP" "$SERVICE_PATH"
+        sudo chmod 644 "$SERVICE_PATH"
         sudo systemctl daemon-reload
         sudo systemctl enable --now cutefish-search-shortcut.service >/dev/null 2>&1 || \
             echo "warning: could not enable cutefish-search-shortcut.service"
